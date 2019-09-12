@@ -1,5 +1,12 @@
 node-jitterbuffer
 =========
+
+> **Fork disclaimer**  
+> This is my naive attempt to support Node 12 in node-mumble and it's dependencies.
+> I'm not experienced in v8 so I can't promise anything, but at least it *just works*.  
+>  
+> ~Fun Maker
+
 ### NodeJS native bindings to libspeex jitter buffer
 
     var jitter = require('jitterbuffer').JitterBuffer;

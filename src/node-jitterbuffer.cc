@@ -36,15 +36,15 @@ class NodeJitterBuffer : public ObjectWrap {
 
 			Local<Object> data = Local<Object>::Cast(
 					packet->Get( Nan::New( "data" ).ToLocalChecked() ) );
-			int timestamp = packet->Get( Nan::New( "timestamp" ).ToLocalChecked() )->Int32Value();
-			int span = packet->Get( Nan::New( "span" ).ToLocalChecked() )->Int32Value();
-			int sequence = packet->Get( Nan::New( "sequence" ).ToLocalChecked() )->Int32Value();
+			int timestamp = packet->Get( Nan::New( "timestamp" ).ToLocalChecked() )->Int32Value(Nan::GetCurrentContext()).FromJust();
+			int span = packet->Get( Nan::New( "span" ).ToLocalChecked() )->Int32Value(Nan::GetCurrentContext()).FromJust();
+			int sequence = packet->Get( Nan::New( "sequence" ).ToLocalChecked() )->Int32Value(Nan::GetCurrentContext()).FromJust();
 
 			// Userdata is optional.
 			int userData = 0;
-			Handle<Value> userDataHandle = packet->Get( Nan::New( "userData" ).ToLocalChecked() );
+			Local<Value> userDataHandle = packet->Get( Nan::New( "userData" ).ToLocalChecked() );
 			if( !userDataHandle.IsEmpty() ) {
-				userData = userDataHandle->Int32Value();
+				userData = userDataHandle->Int32Value(Nan::GetCurrentContext()).FromJust();
 			}
 
 			JitterBufferPacket speexPacket;
@@ -129,7 +129,7 @@ class NodeJitterBuffer : public ObjectWrap {
 			info.GetReturnValue().Set( info.This() );
 		}
 
-		static void Init(Handle<Object> exports) {
+		static void Init(Local<Object> exports) {
 			Nan::HandleScope scope;
 
 			Local<FunctionTemplate> tpl = Nan::New<FunctionTemplate>(New);
@@ -143,13 +143,13 @@ class NodeJitterBuffer : public ObjectWrap {
 			Nan::SetPrototypeMethod( tpl, "getMargin", GetMargin );
 
 			exports->Set(
-				Nan::New("JitterBuffer").ToLocalChecked(), 
-				tpl->GetFunction());
+				Nan::New("JitterBuffer").ToLocalChecked(),
+				tpl->GetFunction(Nan::GetCurrentContext()).ToLocalChecked());
 		}
 };
 
 
-void NodeInit(Handle<Object> exports) {
+void NodeInit(Local<Object> exports) {
 	NodeJitterBuffer::Init( exports );
 }
 
